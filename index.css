@@ -1,3 +1,27 @@
+.game-stats {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    color: #222;
+    pointer-events: none;
+    z-index: 2;
+}
+.roll-count {
+    text-align: left;
+}
+.timer {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+main {
+    position: relative;
+}
 .dice-roll {
     animation: dice-roll 0.4s cubic-bezier(0.4, 2, 0.6, 1) both;
 }
