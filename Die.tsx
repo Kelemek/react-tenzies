@@ -11,16 +11,16 @@ export default function Die(props: DieProps): JSX.Element {
     }
 
     const [rolling, setRolling] = useState<boolean>(false)
-    const prevValue = useRef<number>(props.value)
+    const prevRollTrigger = useRef<number>(props.rollTrigger || 0)
 
     useEffect(() => {
-        if (prevValue.current !== props.value) {
+        if (prevRollTrigger.current !== props.rollTrigger && !props.isHeld) {
             setRolling(true)
             const timeout: number = setTimeout(() => setRolling(false), 400)
-            prevValue.current = props.value
+            prevRollTrigger.current = props.rollTrigger || 0
             return () => clearTimeout(timeout)
         }
-    }, [props.value])
+    }, [props.rollTrigger, props.isHeld])
 
     const dotPositions: number[] = [8, 20, 32]
     const dotPatterns: DotPattern = {

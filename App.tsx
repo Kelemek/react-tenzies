@@ -90,6 +90,7 @@ export default function App(): JSX.Element {
             value={dieObj.value}
             isHeld={dieObj.isHeld}
             hold={() => hold(dieObj.id)}
+            rollTrigger={rollCount}
         />
     ))
 
