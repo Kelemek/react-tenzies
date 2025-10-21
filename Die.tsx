@@ -11,12 +11,23 @@ export default function Die(props: DieProps): JSX.Element {
     }
 
     const [rolling, setRolling] = useState<boolean>(false)
+    const [animationClass, setAnimationClass] = useState<string>("")
     const prevRollTrigger = useRef<number>(props.rollTrigger || 0)
 
     useEffect(() => {
         if (prevRollTrigger.current !== props.rollTrigger && !props.isHeld) {
+            // Randomly select one of 5 animation classes
+            const animations = ["dice-roll-1", "dice-roll-2", "dice-roll-3", "dice-roll-4", "dice-roll-5"]
+            const randomAnimation = animations[Math.floor(Math.random() * animations.length)]
+            
+            setAnimationClass(randomAnimation)
             setRolling(true)
-            const timeout: number = setTimeout(() => setRolling(false), 400)
+            
+            const timeout: number = setTimeout(() => {
+                setRolling(false)
+                setAnimationClass("")
+            }, 600) // Matches animation duration
+            
             prevRollTrigger.current = props.rollTrigger || 0
             return () => clearTimeout(timeout)
         }
@@ -48,7 +59,7 @@ export default function Die(props: DieProps): JSX.Element {
             onClick={props.hold}
             aria-pressed={props.isHeld}
             aria-label={`Die with value ${props.value}, ${props.isHeld ? "held" : "not held"}`}
-            className={rolling ? "dice-roll" : ""}
+            className={rolling ? animationClass : ""}
         >
             <svg width="40" height="40" viewBox="0 0 40 40">
                 <rect x="0" y="0" width="40" height="40" rx="8" fill="none" />
