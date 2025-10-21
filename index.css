@@ -97,6 +97,43 @@ main {
     grid-template: auto auto / repeat(5, 1fr);
     gap: 20px;
     margin-bottom: 40px;
+    width: 100%;
+    max-width: 330px;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 400px) {
+    .dice-container {
+        gap: 12px;
+        max-width: 290px;
+    }
+    
+    .dice-container button {
+        height: 42px;
+        width: 42px;
+    }
+    
+    .dice-container button svg {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+@media (max-width: 350px) {
+    .dice-container {
+        gap: 8px;
+        max-width: 260px;
+    }
+    
+    .dice-container button {
+        height: 38px;
+        width: 38px;
+    }
+    
+    .dice-container button svg {
+        width: 32px;
+        height: 32px;
+    }
 }
 
 button {

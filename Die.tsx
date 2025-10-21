@@ -1,7 +1,8 @@
-import { useRef, useEffect, useState } from "react"
+import { useRef, useEffect, useState, CSSProperties } from "react"
+import type { DieProps, DotPattern } from "./types"
 
-export default function Die(props) {
-    const styles = {
+export default function Die(props: DieProps): JSX.Element {
+    const styles: CSSProperties = {
         backgroundColor: props.isHeld ? "#59E391" : "white",
         display: "flex",
         alignItems: "center",
@@ -9,21 +10,20 @@ export default function Die(props) {
         padding: 0
     }
 
-
-    const [rolling, setRolling] = useState(false)
-    const prevValue = useRef(props.value)
+    const [rolling, setRolling] = useState<boolean>(false)
+    const prevValue = useRef<number>(props.value)
 
     useEffect(() => {
         if (prevValue.current !== props.value) {
             setRolling(true)
-            const timeout = setTimeout(() => setRolling(false), 400)
+            const timeout: number = setTimeout(() => setRolling(false), 400)
             prevValue.current = props.value
             return () => clearTimeout(timeout)
         }
     }, [props.value])
 
-    const dotPositions = [8, 20, 32]
-    const dotPatterns = {
+    const dotPositions: number[] = [8, 20, 32]
+    const dotPatterns: DotPattern = {
         1: [[1, 1]],
         2: [[0, 0], [2, 2]],
         3: [[0, 0], [1, 1], [2, 2]],
@@ -32,7 +32,7 @@ export default function Die(props) {
         6: [[0, 0], [0, 2], [1, 0], [1, 2], [2, 0], [2, 2]]
     }
 
-    const dots = dotPatterns[props.value]?.map(([row, col], i) => (
+    const dots: JSX.Element[] | undefined = dotPatterns[props.value]?.map(([row, col]: [number, number], i: number) => (
         <circle
             key={i}
             cx={dotPositions[col]}

@@ -4,56 +4,61 @@ import { nanoid } from "nanoid"
 import Confetti from "react-confetti"
 import { useWindowWidth, useWindowHeight } from "./hooks"
 import { createPortal } from "react-dom"
+import type { Die as DieType } from "./types"
 
-export default function App() {
-    const windowWidth = useWindowWidth()
-    const windowHeight = useWindowHeight()
-    const [dice, setDice] = useState(() => generateAllNewDice())
-    const [rollCount, setRollCount] = useState(0)
-    const [timer, setTimer] = useState(0)
-    const [timerActive, setTimerActive] = useState(false)
-    const buttonRef = useRef(null)
+export default function App(): JSX.Element {
+    const windowWidth: number = useWindowWidth()
+    const windowHeight: number = useWindowHeight()
+    const [dice, setDice] = useState<DieType[]>(() => generateAllNewDice())
+    const [rollCount, setRollCount] = useState<number>(0)
+    const [timer, setTimer] = useState<number>(0)
+    const [timerActive, setTimerActive] = useState<boolean>(false)
+    const buttonRef = useRef<HTMLButtonElement>(null)
 
-    const gameWon = dice.every(die => die.isHeld) &&
-        dice.every(die => die.value === dice[0].value)
+    const gameWon: boolean = dice.every((die: DieType) => die.isHeld) &&
+        dice.every((die: DieType) => die.value === dice[0].value)
 
     // Timer effect
     useEffect(() => {
-        let interval = null
+        let interval: number | null = null
         if (timerActive && !gameWon) {
-            interval = setInterval(() => setTimer(t => t + 1), 1000)
+            interval = setInterval(() => setTimer((t: number) => t + 1), 1000)
         } else if (!timerActive || gameWon) {
-            clearInterval(interval)
+            if (interval !== null) clearInterval(interval)
         }
-        return () => clearInterval(interval)
+        return () => {
+            if (interval !== null) clearInterval(interval)
+        }
     }, [timerActive, gameWon])
 
     // Focus button on win
     useEffect(() => {
-        if (gameWon) {
+        if (gameWon && buttonRef.current) {
             buttonRef.current.focus()
             setTimerActive(false)
         }
     }, [gameWon])
 
-    function generateAllNewDice() {
-        return new Array(10)
-            .fill(0)
-            .map(() => ({
-                value: Math.ceil(Math.random() * 6),
+    function generateAllNewDice(): DieType[] {
+        const dice: DieType[] = [];
+        for (let i = 0; i < 10; i++) {
+            dice.push({
+                value: Math.ceil(Math.random() * 6) as DieType['value'],
                 isHeld: false,
                 id: nanoid()
-            }))
+            });
+        }
+        return dice;
     }
     
-    function rollDice() {
+    function rollDice(): void {
         if (!gameWon) {
-            setDice(oldDice => oldDice.map(die =>
+            setDice((oldDice: DieType[]) => oldDice.map((die: DieType) =>
                 die.isHeld ?
                     die :
-                    { ...die, value: Math.ceil(Math.random() * 6) }
+                    { ...die, value: Math.ceil(Math.random() * 6) as DieType['value'] }
             ))
-            setRollCount(c => c + 1)
+            setRollCount((c: number) => c + 1)
             if (rollCount === 0) setTimerActive(true)
         } else {
             setDice(generateAllNewDice())
@@ -63,10 +68,10 @@ export default function App() {
         }
     }
 
-    function hold(id) {
-        setDice(oldDice => {
-            const alreadyHeld = oldDice.some(die => die.isHeld)
-            const newDice = oldDice.map(die =>
+    function hold(id: string): void {
+        setDice((oldDice: DieType[]) => {
+            const alreadyHeld: boolean = oldDice.some((die: DieType) => die.isHeld)
+            const newDice: DieType[] = oldDice.map((die: DieType) =>
                 die.id === id ?
                     { ...die, isHeld: !die.isHeld } :
                     die
@@ -79,7 +84,7 @@ export default function App() {
         })
     }
 
-    const diceElements = dice.map(dieObj => (
+    const diceElements: JSX.Element[] = dice.map((dieObj: DieType) => (
         <Die
             key={dieObj.id}
             value={dieObj.value}
